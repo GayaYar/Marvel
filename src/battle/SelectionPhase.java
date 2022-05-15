@@ -25,19 +25,6 @@ public class SelectionPhase {
      * @return the index of the character to check
      */
     private static int whoToCheck(List<Character> characters, Scanner input) {
-//        boolean chosen = false;
-//        int charNum = -1;
-//        while (!chosen) {
-//            System.out.println("\n Who would you like to check? (type in the number)");
-//            for(int i=0; i<characters.size(); i++) {
-//                System.out.println((i+1)+"- "+characters.get(i).getName());
-//            }
-//            charNum = IntReader.readInt(input);
-//            chosen = charNum>0 && charNum<=characters.size();
-//            if(!chosen) {
-//                System.out.println("Invalid input, please enter the number of the character you would like to check.");
-//            }
-//        }
         String question = "\n Who would you like to check? (type in the number)";
         for(int i=0; i<characters.size(); i++) {
                 question += "\n"+(i+1)+"- "+characters.get(i).getName();

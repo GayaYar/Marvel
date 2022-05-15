@@ -23,8 +23,9 @@ public class BattlePhase {
      * checks if anyone lost.
      *
      * When the fight is over, prints message to the user and levels up the winning character.
-     * @param userHero
-     * @param computerHero
+     * @param userHero - the user's character
+     * @param computerHero - the computer's character
+     * @param input - an open scanner
      */
     public void fight(Character userHero, Character computerHero, Scanner input) {
         this.input = input;
@@ -68,20 +69,7 @@ public class BattlePhase {
     private int askForAction() {
         System.out.println();
         System.out.println(userHeroName + ", it's your turn, what would you like to do?");
-//        boolean validAnswer = false;
-//        int answer = -1;
-//        while (!validAnswer) {
-//            System.out.println("Fight (mutants have a stronger fight that takes 2 turns): " + 1);
-//            System.out.println("Defend: " + 2);
-//            System.out.println("Side ability (moral for hero, slur for villain or neutral for neutral): "+3);
-//            System.out.println("Show stats: " + 0);
-//            answer = IntReader.readInt(input);
-//            if (answer > 3 || answer < 0) {
-//                System.out.println("Not a valid answer, what would you like to do?");
-//            } else {
-//                validAnswer = true;
-//            }
-//        }
+
         String question = "Fight (mutants have a stronger fight that takes 2 turns): " + 1 + "\n"
                 + "Defend: " + 2 + "\n"
                 + "Side ability (moral for hero, slur for villain or neutral for neutral): " + 3 + "\n"
