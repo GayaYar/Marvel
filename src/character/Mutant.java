@@ -11,13 +11,13 @@ public class Mutant extends Character {
     }
 
     /**
-     * doubles the attack power, turn after this will not be played
-     * @return the doubles attack power
+     * strengthens the attack power, turn after this will not be played
+     * @return the stronger attack power
      */
     @Override
     public double attack() {
         int currentTurn = turn;
         beforeTurnActions.add((checkTurn) -> { return checkTurn != currentTurn+1;});
-        return super.attack()*2;
+        return super.attack()*1.5;
     }
 }

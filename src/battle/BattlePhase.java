@@ -3,12 +3,17 @@ package battle;
 import character.Character;
 import java.util.Scanner;
 import java.util.function.IntSupplier;
+import util.ContinuousAsker;
 import util.DoubleFormatter;
 import util.IntReader;
 
 public class BattlePhase {
-    private double hp1 = 0;
-    private double hp2 = 0;
+    private Character userHero;
+    private Character computerHero;
+    private double userHp = 0;
+    private double computerHp = 0;
+    private Scanner input;
+    private String userHeroName;
 
 
     /**
@@ -17,71 +22,82 @@ public class BattlePhase {
      * if so- gets the action to play (asks user to choose action or choose random for computer) and plays it
      * checks if anyone lost.
      *
-     * When the fight is over, prints message to the user and levels up the winner character.
+     * When the fight is over, prints message to the user and levels up the winning character.
      * @param userHero
      * @param computerHero
      */
     public void fight(Character userHero, Character computerHero, Scanner input) {
-        while (validateHP(userHero, computerHero)) {
-
-//            if (userHero.takeTurn()) {
-//                int action = askForAction(input, userHero.getName());
-//                mapActions(userHero, computerHero, action, input);
-//            }else {
-//                System.out.println(userHero.getName()+"'s turn skipped");
-//            }
-//            System.out.println();
-//            if(validateHP(userHero, computerHero) && computerHero.takeTurn()) {
-//                mapActions(computerHero, userHero, (int)(Math.random()*3)+1, input);
-//            }
-
+        this.input = input;
+        userHeroName = userHero.getName();
+        this.userHero = userHero;
+        this.computerHero = computerHero;
+        while (validateHP()) {
+            playTurn(this::askForAction, this.userHero, this.computerHero);
+            if(validateHP()) {
+                playTurn(()->{return ((int)(Math.random()*3)+1);}, this.computerHero, this.userHero);
+            }
         }
-        if (hp1 <= 0 && hp2 <= 0) {
+        if (userHp <= 0 && computerHp <= 0) {
             System.out.println("Both sides are too injured to continue and have to wait to the sequel. Battle Over.");
         } else {
-            Character winner = hp1<=0 ? computerHero : userHero;
+            Character winner = userHp <=0 ? computerHero : userHero;
             System.out.println(winner.getName()+" won! The opponent is dead for at least one movie...");
             winner.levelUp();
         }
     }
 
-    private void playTurn(IntSupplier getAction, Character player, Character opponent, Scanner input) {
+    private void playTurn(IntSupplier getAction, Character player, Character opponent) {
         if(player.takeTurn()) {
             int action = getAction.getAsInt();
-            mapActions(player, opponent, action, input);
+            mapActions(player, opponent, action);
         }else {
             System.out.println(player.getName()+"'s turn is skipped.");
         }
     }
 
-    private boolean validateHP(Character hero1, Character hero2) {
-        this.hp1 = hero1.getHp();
-        this.hp2 = hero2.getHp();
-        return hp1 > 0 && hp2 > 0;
+    private boolean validateHP() {
+        this.userHp = userHero.getHp();
+        this.computerHp = computerHero.getHp();
+        return userHp > 0 && computerHp > 0;
     }
 
-    private int askForAction(Scanner input, String name) {
+    /**
+     * Continuously asks the user to choose an action from the action list until a valid response is received.
+     * @return the chosen action number
+     */
+    private int askForAction() {
         System.out.println();
-        System.out.println(name + ", it's your turn, what would you like to do?");
-        boolean validAnswer = false;
-        int answer = -1;
-        while (!validAnswer) {
-            System.out.println("Fight (mutants have a stronger fight that takes 2 turns): " + 1);
-            System.out.println("Defend: " + 2);
-            System.out.println("Side ability (moral for hero, slur for villain or neutral for neutral): "+3);
-            System.out.println("Show stats: " + 0);
-            answer = IntReader.readInt(input);
-            if (answer > 3 || answer < 0) {
-                System.out.println("Not a valid answer, what would you like to do?");
-            } else {
-                validAnswer = true;
-            }
-        }
+        System.out.println(userHeroName + ", it's your turn, what would you like to do?");
+//        boolean validAnswer = false;
+//        int answer = -1;
+//        while (!validAnswer) {
+//            System.out.println("Fight (mutants have a stronger fight that takes 2 turns): " + 1);
+//            System.out.println("Defend: " + 2);
+//            System.out.println("Side ability (moral for hero, slur for villain or neutral for neutral): "+3);
+//            System.out.println("Show stats: " + 0);
+//            answer = IntReader.readInt(input);
+//            if (answer > 3 || answer < 0) {
+//                System.out.println("Not a valid answer, what would you like to do?");
+//            } else {
+//                validAnswer = true;
+//            }
+//        }
+        String question = "Fight (mutants have a stronger fight that takes 2 turns): " + 1 + "\n"
+                + "Defend: " + 2 + "\n"
+                + "Side ability (moral for hero, slur for villain or neutral for neutral): " + 3 + "\n"
+                + "Show stats: " + 0;
+        Integer answer = ContinuousAsker.ask(question
+                , () -> {
+                    return IntReader.readInt(input);
+                }, (num) -> {
+                    return num >= 0 && num <= 3;
+                },
+                "Not a valid answer, what would you like to do?");
 
         return answer;
     }
 
-    private void mapActions(Character player, Character opponent, int action, Scanner input) {
+    private void mapActions(Character player, Character opponent, int action) {
         String playerName = player.getName();
         switch (action) {
             case 1:
@@ -103,7 +119,7 @@ public class BattlePhase {
                 System.out.println(opponent.getName()+" stats:");
                 System.out.println(opponent.showStatus());
                 System.out.println();
-                mapActions(player, opponent, askForAction(input, player.getName()), input);
+                mapActions(player, opponent, askForAction());
         }
     }
 

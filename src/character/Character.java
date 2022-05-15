@@ -101,7 +101,7 @@ public abstract class Character {
         if(safe) {
             return 0;
         }else {
-            double hpToReduce = power*(statsChart.getPhysicalDefence() / 100.00);
+            double hpToReduce = power*((100-statsChart.getPhysicalDefence()) / 100.00);
             statsChart.changeHp(-hpToReduce);
             return hpToReduce;
         }
