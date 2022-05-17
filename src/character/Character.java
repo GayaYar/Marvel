@@ -141,10 +141,14 @@ public abstract class Character {
     public void updateAttack(double timesStronger, int turns) {
         if(timesStronger>0) {
             final double currentAttack = statsChart.getPhysicalAttack();
-            statsChart.setPhysicalAttack(currentAttack*timesStronger);
+            final double newAttack = currentAttack*timesStronger;
+            statsChart.setPhysicalAttack(newAttack);
             if(turns>0) {
                 final int currentTurn = turn;
                 beforeTurnActions.add((checkTurn) -> {
+                    if(checkTurn <= currentTurn+turns) {
+                        statsChart.setPhysicalAttack(newAttack);
+                    }
                     if(checkTurn == currentTurn+turns+1) {
                         statsChart.setPhysicalAttack(currentAttack);
                     };
@@ -162,13 +166,16 @@ public abstract class Character {
      */
     public void updateDefence(double amount, int turns) {
         final double currentDefence = statsChart.getPhysicalDefence();
-        statsChart.setPhysicalDefence(currentDefence-amount);
+        final double newDefence = currentDefence+amount;
+        statsChart.setPhysicalDefence(newDefence);
         if(turns>0) {
             final int currentTurn = turn;
             beforeTurnActions.add((checkTurn) -> {
-                if(checkTurn == currentTurn+turns+1) {
+                if(checkTurn <= currentTurn+turns) {
+                    statsChart.setPhysicalDefence(newDefence);
+                }else if(checkTurn == currentTurn+turns+1) {
                     statsChart.setPhysicalDefence(currentDefence);
-                };
+                }
                 return true;
             });
         }

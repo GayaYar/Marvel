@@ -8,6 +8,6 @@ public class Alien extends Character {
 
     public Alien(StatsChart statsChart, int level, int rank, String tier, Type type, Side side, String name) {
         super(statsChart, level, rank, tier, type, side, name);
-        statsChart.setPhysicalDefence(statsChart.getPhysicalDefence()+15.0);
+        statsChart.setPhysicalDefence(statsChart.getPhysicalDefence()+5.0);
     }
 }
