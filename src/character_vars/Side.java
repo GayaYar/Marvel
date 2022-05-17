@@ -8,7 +8,7 @@ public enum Side {
         player.updateAttack(1.2, 3);
         return "I used moral affect, now I'm 20% stronger for 3 turns.";}),
     SUPER_VILLAIN((player, opponent) -> {
-        player.updateDefence(-15.0, 3);
+        opponent.updateDefence(-15.0, 3);
         return "I used slur affect, my opponent's defence is weaker for 3 turns.";}),
     NEUTRAL((player, opponent) -> {
         return "I'm "+player.getName()+"! I'm neutral.";});

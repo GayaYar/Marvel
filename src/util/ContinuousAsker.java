@@ -23,6 +23,7 @@ public class ContinuousAsker {
         while(!valid) {
             System.out.println(question);
             answer = getAnswer.get();
+            ScreenClearer.clear();
             if(isValid.test(answer)) {
                 valid = true;
             }else {

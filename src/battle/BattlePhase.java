@@ -6,6 +6,7 @@ import java.util.function.IntSupplier;
 import util.ContinuousAsker;
 import util.DoubleFormatter;
 import util.IntReader;
+import util.ScreenClearer;
 
 public class BattlePhase {
     private Character userHero;
