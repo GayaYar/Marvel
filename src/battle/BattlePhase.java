@@ -72,7 +72,7 @@ public class BattlePhase {
 
         String question = "Fight (mutants have a stronger fight that takes 2 turns): " + 1 + "\n"
                 + "Defend: " + 2 + "\n"
-                + "Side ability (moral for hero, slur for villain or neutral for neutral): " + 3 + "\n"
+                + "Side ability: " + 3 + "\n"
                 + "Show stats: " + 0;
         Integer answer = ContinuousAsker.ask(question
                 , () -> {
@@ -97,8 +97,9 @@ public class BattlePhase {
                 playerDefends(player);
                 break;
             case 3:
-                System.out.println(playerName+" goes for special affect.");
-                useSpecial(player, opponent);
+                System.out.println(playerName+" goes for special side ability.");
+                String abilityResponse = player.useSideAbility(opponent);
+                System.out.println(playerName+" says- "+abilityResponse);
                 break;
             default:
                 System.out.println(playerName+" stats:");
@@ -132,25 +133,6 @@ public class BattlePhase {
             System.out.println(player.getName()+" defends successfully and will be protected from attacks at this turn.");
         }else {
             System.out.println(player.getName()+" tried to defend and failed...");
-        }
-    }
-
-    private void useSpecial(Character player, Character opponent) {
-        switch (player.getSide()) {
-            case SUPER_HERO:
-                String message =  player.superHeroSpecial()?
-                        player.getName()+" uses moral affect and gains 20% more attack power for the next 3 rounds." :
-                        player.getName()+" is unable to use the moral affect.";
-                System.out.println(message);
-                break;
-            case SUPER_VILLAIN:
-                double newDefence = opponent.hitBySuperVillain();
-                System.out.println(player.getName()+" uses the slur affect and reduces his opponents defence power to "
-                        +newDefence+" for 3 turns.");
-                break;
-            default:
-                System.out.println(player.getName()+" says:");
-                System.out.println(player.neutralHeroSpecial());
         }
     }
 }

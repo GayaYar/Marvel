@@ -132,40 +132,50 @@ public abstract class Character {
         return name;
     }
 
-    public boolean superHeroSpecial() {
-        if(this.side == Side.SUPER_HERO) {
+    /**
+     * Multiplies the current attack power by "timesStronger" if "timesStronger" is bigger than 0.
+     * If "turns" is greater than 0, will return to the current attack power after the specified amount of turns.
+     * @param timesStronger - number to multiply the current attack power with
+     * @param turns - number of turns to wait before turning back to current (before this method) attack power. If<=0, will not change back.
+     */
+    public void updateAttack(double timesStronger, int turns) {
+        if(timesStronger>0) {
             final double currentAttack = statsChart.getPhysicalAttack();
-            statsChart.setPhysicalAttack(currentAttack*1.2);
+            statsChart.setPhysicalAttack(currentAttack*timesStronger);
+            if(turns>0) {
+                final int currentTurn = turn;
+                beforeTurnActions.add((checkTurn) -> {
+                    if(checkTurn == currentTurn+turns+1) {
+                        statsChart.setPhysicalAttack(currentAttack);
+                    };
+                    return true;
+                });
+            }
+        }
+    }
+
+    /**
+     * Adds the amount to physical defence.
+     * If "turns" is greater than 0, will return to the current defence power after the specified amount of turns.
+     * @param amount - amount to add to defence
+     * @param turns - number of turns to wait before turning back to current (before this method) defence power. If<=0, will not change back.
+     */
+    public void updateDefence(double amount, int turns) {
+        final double currentDefence = statsChart.getPhysicalDefence();
+        statsChart.setPhysicalDefence(currentDefence-amount);
+        if(turns>0) {
             final int currentTurn = turn;
             beforeTurnActions.add((checkTurn) -> {
-                if(checkTurn == currentTurn+4) {
-                    statsChart.setPhysicalAttack(currentAttack);
+                if(checkTurn == currentTurn+turns+1) {
+                    statsChart.setPhysicalDefence(currentDefence);
                 };
                 return true;
             });
-            return true;
         }
-        return false;
     }
 
-    public double hitBySuperVillain() {
-       final double currentDefence = statsChart.getPhysicalDefence();
-       final int currentTurn = turn;
-       statsChart.setPhysicalDefence(currentDefence-15);
-        beforeTurnActions.add((checkTurn) -> {
-            if(checkTurn == currentTurn+4) {
-                statsChart.setPhysicalDefence(currentDefence);
-            };
-            return true;
-        });
-        return statsChart.getPhysicalDefence();
-    }
-
-    public String neutralHeroSpecial() {
-        if(this.side == Side.NEUTRAL) {
-            return "I'm "+name+"! I'm neutral.";
-        }
-        return "I'm not neutral in this.";
+    public String useSideAbility(Character opponent) {
+        return side.useSpecial(this, opponent);
     }
 
     public Side getSide() {
